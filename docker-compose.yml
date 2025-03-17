@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - echomart-network
+  supplyservice:
+    build:
+      context: ./SupplyService
+      dockerfile: Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      - rabbitmq
+    networks:
+      - echomart-network
+  orderservice:
+    build:
+      context: ./OrderService
+      dockerfile: Dockerfile
+    ports:
+      - "5002:80"
+    depends_on:
+      - rabbitmq
+    networks:
+      - echomart-network
+  paymentservice:
+    build:
+      context: ./PaymentService
+      dockerfile: Dockerfile
+    ports:
+      - "5003:80"
+    depends_on:
+      - rabbitmq
+    networks:
+      - echomart-network
+networks:
+  echomart-network:
+    driver: bridge
